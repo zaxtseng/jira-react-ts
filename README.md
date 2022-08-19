@@ -84,3 +84,25 @@ fetch("").then(async (res) => {
 });
 ```
 
+# 第二章 自定义Hook
+```js
+// 加载时的自定义Hook
+export const useMount = callback => {
+    useEffect(() => {
+        callback()
+    }, [])
+}
+
+export const useDebounce = (value, delay) => {
+    const [debounceValue, setDebounceValue] = useState(value)
+    useEffect(() => {
+        // 每次value变化,设置一个定时器
+        const timeout = setTimeout(() => setDebounceValue(value), delay)
+        // 每次在上一个useEffect处理完在执行
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, [delay, value])
+    return debounceValue
+}
+```
