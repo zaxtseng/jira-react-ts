@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# 格式化配置安装
+## 安装prettier
+```sh
+yarn add --dev --exact prettier
+```
+## 创建文件
+```sh
+echo {}> .prettierrc.json
+# 在其中添加内容
+# Ignore artifacts:
+build
+coverage
+```
+## 避免与eslint冲突
+```sh
+npm install --save-dev eslint-config-prettier
+```
+修改package.json文件
+```json
+{
+  "extends": [
+    "some-other-config-you-use",
+    "prettier"
+  ]
+}
+```
+## 在git提交时格式化
+```sh
+yarn add --dev husky lint-staged
+npx husky install
+npm set-script prepare "husky install"
+npx husky add .husky/pre-commit "npx lint-staged"
+```
+修改package.json文件
+```json
+{
+  "lint-staged": {
+    "src/**/*.{ts,tsx,json,css,scss,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  }
+}
+```
+# Mock数据
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+工具: `json-server`
+安装: `yarn add json-server -D`
 
-## Available Scripts
+## 使用json-server
+修改package.json
+```json
+  "scripts": {
+    //**
+    "json-server": "json-server __json_server_mock__/db.json --watch",
+  }
+```
+## restful API
+URI代表资源对象,METHOD代表行为
+```
+GET // 获取
+POST // 新增
+PUT //替换
+PATCH //修改
+DELETE //删除
+```
 
-In the project directory, you can run:
+# 第一章 工程列表
+知识点: 状态提升
 
-### `yarn start`
+将获取list及状态的方法提升到父组件,这样子组件就都可以用props接收得到数据.
+## 常用技巧
+useState中设置setState中的方法可以将参数解构,简化浅拷贝
+```jsx
+onChange={e => setParam(...param, e.target.value)}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+fetch方法返回的是异步可以用async处理
+```jsx
+fetch("").then(async (res) => {
+    if (res.ok) {
+    setList(await res.json());
+    }
+});
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
