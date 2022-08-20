@@ -84,6 +84,26 @@ fetch("").then(async (res) => {
 });
 ```
 
+修改值时可以先将该值拷贝,修改拷贝值,return出来
+```tsx
+const useArray = <T></T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray)
+
+  return {
+    value,
+    setValue,
+    add: (item: V) => {
+      setValue([...item, value])
+    },
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value]
+      copy.splice(index,1)
+      setValue(copy)
+    }
+  }
+}
+```
 # 第二章 自定义Hook
 ```js
 // 加载时的自定义Hook
