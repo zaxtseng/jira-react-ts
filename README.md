@@ -127,30 +127,3 @@ export const useDebounce = (value, delay) => {
 }
 ```
 # 第三章 登录注册
-## 对json-server中间件辅助
-新建`__json_server_mock__/middleware.js`
-```js
-module.exports = (req, res, next) => {
-    if(req.method === 'POST' && req.path === '/login') {
-        if(req.body.username === 'tom' && req.body.password === '123456') {
-            return res.status(200).json({
-                user: {
-                    token: '123'
-                }
-            })
-        }else {
-            return res.status(400).json({message: '密码错误'})
-        }
-    }
-}
-```
-修改package.json文件
-```json
-"json-server": "json-server __json_server_mock__/db.json --watch --port 3001 --middlewares __json_server_mock__/middleware.js",
-```
-## 安装jira-dev-tool
-用于服务代理,将请求数据缓存在localStorage中.可以对网络设置对应控制.
-```sh
-npx imooc-jira-tool
-```
-注意: 该依赖中引用antd由于和rca中有冲突,所以将node_modules中该依赖引用的所有antd.css都改成antd.min.css即可.

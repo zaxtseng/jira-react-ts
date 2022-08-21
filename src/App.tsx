@@ -1,4 +1,4 @@
-import './App.less';
+// import './App.css';
 import LoginScreen from 'screens/login';
 import { ProjectListScreen } from './screens/project-list';
 
@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <LoginScreen />
-      {/* <ProjectListScreen /> */}
+      <ProjectListScreen />
     </div>
   );
 }
