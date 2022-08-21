@@ -1,13 +1,13 @@
 import React from 'react';
-import LoginScreen from 'screens/login';
 import { useAuth } from 'context/auth.context';
+import { ProjectListScreen } from './screens/project-list/index';
 
 const AuthenticatedApp = () => {
   const { logout } = useAuth();
   return (
     <>
       <button onClick={logout}>登出</button>
-      <LoginScreen />
+      <ProjectListScreen />
     </>
   );
 };

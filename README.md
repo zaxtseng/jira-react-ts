@@ -200,3 +200,5 @@ const useAuth = () => {
 ```tsx
 const { login,user } = useAuth()
 ```
+# 构建请求工具http
+使用fetch封装,注意和axios的区别,无法捕获非网络异常导致的error.必须手动Promise.reject()抛出.
