@@ -154,3 +154,49 @@ module.exports = (req, res, next) => {
 npx imooc-jira-tool
 ```
 注意: 该依赖中引用antd由于和rca中有冲突,所以将node_modules中该依赖引用的所有antd.css都改成antd.min.css即可.
+# 第四章 使用useContext
+## 创建context
+使用createContext方法创建context
+```tsx
+// 泛型可以约束传入的内容
+const AuthContext = createContext<{ user: User | null; login: (form: AuthForm) => Promise<void>; register: (form: AuthForm) => Promise<void>; logout: () => void; } | undefined>(undefined)
+// context 的名字
+AuthContext.displayName = 'AuthContext'
+```
+## 创建Provider及其附属方法
+```tsx
+export const AuthProvider = ({children}: {children:ReactNode}) => {
+    const [user, setUser] = useState<User | null>(null)
+
+    const login = (form: AuthForm) => auth.login(form).then(setUser)
+    const register = (form: AuthForm) => auth.register(form).then(setUser)
+    const logout = () => auth.logout()
+    return <AuthContext.Provider children={children} value={{ user, login, register, logout }} />
+}
+```
+## 使Context在全局生效
+包裹App组件
+```tsx
+root.render(
+    <React.StrictMode>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </React.StrictMode>
+  )
+```
+## 调用context
+使用useHook自定义hook调用context
+```tsx
+const useAuth = () => {
+  const context = useContext(AuthContext)
+   if(!context) {
+        throw new Error("useAuth必须在AuthProvider中使用")
+    }
+    return context
+}
+```
+## 页面中使用
+```tsx
+const { login,user } = useAuth()
+```
