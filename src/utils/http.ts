@@ -16,7 +16,7 @@ export const http = (
     method: 'GET',
     headers: {
       Authorization: token ? `Bearer ${token}` : '',
-      'Content-Type': data ? 'applcation/json' : '',
+      'Content-Type': data ? 'application/json' : '',
     },
     ...customConfig,
   };
