@@ -242,3 +242,10 @@ const ShadowCard = styled(Card)`
   width: 40rem;
 `
 ```
+## 关于svg的引入问题
+cra虽然声明了svg作为模块可以引入,但是仍会报错.   
+解决方法:    
+新建`src/react-app-env.d.ts`
+```ts
+/// <reference types="react-scripts" />
+```

@@ -4,9 +4,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { loadDevTools } from 'jira-dev-tool';
 // 由于部分样式冲突，务必在 jira-dev-tool 后面引入 antd
-// import 'antd/dist/antd.less';
+import 'antd/dist/antd.less';
 import { AppProviders } from 'context';
-import 'antd/dist/antd.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 loadDevTools(() =>
