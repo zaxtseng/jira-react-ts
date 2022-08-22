@@ -153,9 +153,7 @@ module.exports = (req, res, next) => {
 ```sh
 npx imooc-jira-tool
 ```
-<<<<<<< HEAD
-注意: 该依赖中引用antd由于和rca中有冲突,所以将node_modules中该依赖引用的所有antd.css都改成antd.min.css即可.
-=======
+
 注意: 该依赖中引用antd由于和rca中有冲突,所以将node_modules中该依赖引用的所有antd.css都改成antd.min.css即可.
 # 第四章 使用useContext
 ## 创建context
