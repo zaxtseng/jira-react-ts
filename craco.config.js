@@ -25,7 +25,8 @@ module.exports = {
       plugin: CracoAntDesignPlugin,
       options: {
         customizeTheme: {
-          '@primary-color': '#1DA57A',
+          '@primary-color': "rgb(0, 82, 204)",
+          '@font-size': '16px'
         },
       },
     },

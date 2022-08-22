@@ -202,3 +202,42 @@ const { login,user } = useAuth()
 ```
 # 构建请求工具http
 使用fetch封装,注意和axios的区别,无法捕获非网络异常导致的error.必须手动Promise.reject()抛出.
+## 保证token的刷新
+在context中的挂载阶段,获取token.
+```tsx
+// auth-provider.ts
+const bootstrapUser = async () => {
+  let user = null
+  const token = auth.getToken()
+  if(token) {
+    const data = await http('me', {token})
+    user = data.user
+  }
+  return user
+}
+
+//在provider中
+useMount(() => {
+  // bootstrapUser().then(user=>setUser(user))可以省略其中的user
+  bootstrapUser().then(setUser)
+})
+```
+# 第五章 Css-in-Js
+## 安装craco
+用于antd自定义主题变量,具体参考antd官网
+
+## 使用styled-component和emotion
+```sh
+@emotion/styled @emotion/react
+```
+写法,注意首字母大写
+```tsx
+const Container = styled.div`
+  display: flex;
+`
+
+// 注意styled后只能跟原生元素,如果要修改antd,加括号
+const ShadowCard = styled(Card)`
+  width: 40rem;
+`
+```

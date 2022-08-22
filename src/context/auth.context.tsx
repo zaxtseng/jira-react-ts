@@ -9,7 +9,7 @@ const AuthContext = createContext<
       user: User | null;
       login: (form: AuthForm) => Promise<void>;
       register: (form: AuthForm) => Promise<void>;
-      logout: () => void;
+      logout: () => Promise<void>;
     }
   | undefined
 >(undefined);
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout();
+  const logout = () => auth.logout().then(() => setUser(null));
   // 挂载时重置user
   useMount(() => {
     bootstrapUser().then(setUser);
