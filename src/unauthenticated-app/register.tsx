@@ -1,24 +1,21 @@
 import { useAuth } from 'context/auth.context';
-import React, { FormEvent } from 'react';
+import { FormEvent } from 'react';
 
 type Props = {};
 
-const LoginScreen = (props: Props) => {
-  const { login, user } = useAuth();
+const RegisterScreen = (props: Props) => {
+  const { register, user } = useAuth();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = (e.currentTarget.elements[0] as HTMLInputElement).value;
     const password = (e.currentTarget.elements[1] as HTMLInputElement).value;
-    // 登录
-    // const login = (param: { username: string; password: string }) => { }
-    login({ username, password });
+    // const register = (param: { username: string; password: string }) => { }
+    register({ username, password });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {user ? <div>user: {user?.name}</div> : null}
-
       <div>
         <label>用户名</label>
         <input type={'text'} id={'name'} />
@@ -29,10 +26,10 @@ const LoginScreen = (props: Props) => {
         <input type={'password'} id={'password'} />
       </div>
       <div>
-        <button type="submit">登录</button>
+        <button type="submit">注册</button>
       </div>
     </form>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
