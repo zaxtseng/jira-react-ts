@@ -249,3 +249,30 @@ cra虽然声明了svg作为模块可以引入,但是仍会报错.
 ```ts
 /// <reference types="react-scripts" />
 ```
+## Grid布局和Flex布局
+区别:
+1. 一维布局: flex;二维布局: grid;
+2. 从内容出发用flex,布局出发用grid.
+内容出发:先有一组数据,数量不固定,希望均匀分布在容器中,由内容自己的大小占据空间.
+布局出发: 先规划网格,再把元素往里面填充. 
+
+## 创建共用组件
+```tsx
+import styled from "@emotion/styled";
+
+export const Row = styled.div<{
+    gap?: number | boolean
+    between?: boolean
+    marginBottom?: number
+}>`
+    display: flex;
+    align-items: center;
+    justify-content: ${props =>props.between ? 'space-between' : undefined};
+    margin-bottom: ${props => props.marginBottom + 'rem'};
+    > *{
+        margin-top: 0!important;
+        margin-bottom: 0 !important;
+        margin-right: ${props =>typeof props.gap === 'number' ? props.gap + 'rem' : props.gap ? '2rem' : undefined};
+    }
+`
+```
