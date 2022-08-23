@@ -276,3 +276,18 @@ export const Row = styled.div<{
     }
 `
 ```
+# 修改网络请求工具
+```sh
+yarn add jira-dev-tool@next react-query
+```
+修改context文件
+```tsx
+
+export const AppProviders = ({ children }: { children: ReactNode }) => {
+  return (
+    <QueryClientProvider client={new QueryClient()}>
+      <AuthProvider>{children}</AuthProvider>
+    </QueryClientProvider>
+  );
+  ```
+  
