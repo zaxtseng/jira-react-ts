@@ -7,6 +7,8 @@ import { useHttp } from 'utils/http';
 import styled from '@emotion/styled';
 import { useAsync } from '../../utils/use-async';
 import { Typography } from 'antd';
+import { useProject } from '../../utils/project';
+import { useUsers } from '../../utils/users';
 
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
@@ -14,31 +16,18 @@ export const ProjectListScreen = () => {
     personId: '',
   });
 
-  const [users, setUsers] = useState([]);
-  // const [list, setList] = useState([]);
   const debounceParam = useDebounce(param, 2000);
-
-  const client = useHttp();
-  const { run, isLoading, error, data: list } = useAsync<Project[]>();
-
-  useEffect(() => {
-    client('projects', { data: cleanObject(debounceParam) });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceParam]);
-
-  useMount(() => {
-    client('users').then(setUsers);
-  });
+  const { isLoading, error, data: list } = useProject(debounceParam);
+  const { data: users } = useUsers();
 
   return (
     <Container>
       <h1>项目列表</h1>
-      <SearchPanel param={param} setParam={setParam} users={users} />
+      <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? (
         <Typography.Text type="danger">{error.message}</Typography.Text>
       ) : null}
-      <List loading={isLoading} users={users} dataSource={list || []} />
+      <List loading={isLoading} users={users || []} dataSource={list || []} />
     </Container>
   );
 };
