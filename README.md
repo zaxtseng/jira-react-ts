@@ -58,7 +58,13 @@ cat <<EEE > .husky/commit-msg
 npx --no -- commitlint --edit "\${1}"
 EEE
 ```
+## 出现无法提交的bug
+```sh
+// × lint-staged failed due to a git error.
+// Any lost modifications can be restored from a git stash:
 
+git commit -m "" --no-verify 绕过了lint的检查
+```
 # Mock数据
 
 工具: `json-server`
