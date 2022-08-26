@@ -25,6 +25,7 @@ npm install --save-dev eslint-config-prettier
 }
 ```
 ## 在git提交时格式化
+使用方法在prettier文档中.
 ```sh
 yarn add --dev husky lint-staged
 npx husky install
@@ -42,6 +43,22 @@ npx husky add .husky/pre-commit "npx lint-staged"
   }
 }
 ```
+## 提交时检测commit信息-commit-lint
+```sh
+// 安装
+npm install --save-dev @commitlint/{config-conventional,cli}
+// 配置
+echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+
+// 配置信息
+cat <<EEE > .husky/commit-msg
+#!/bin/sh
+. "\$(dirname "\$0")/_/husky.sh"
+
+npx --no -- commitlint --edit "\${1}"
+EEE
+```
+
 # Mock数据
 
 工具: `json-server`
