@@ -426,3 +426,36 @@ export const useProject = (param?: Partial<Project>) => {
       });
   };
   ```
+  ## 完善注册密码验证
+```tsx
+  if (cpassword !== values.password) {
+    onError(new Error("请确认两次密码相同"));
+    return;
+  }
+  ```
+  # 错误边界
+  ```tsx
+  import React from "react";
+
+type FallBackRender = (props: { error: Error | null }) => React.ReactElement;
+
+export class ErrorBoundary extends React.Component<
+  React.PropsWithChildren<{ fallbackRender: FallBackRender }>,
+  { error: Error | null }
+> {
+  state = { error: null };
+  // 当子组件抛出异常，这里会接收到并且调用
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    const { error } = this.state;
+    const { fallbackRender, children } = this.props;
+    if (error) {
+      return fallbackRender({ error });
+    }
+    return children;
+  }
+}
+```
