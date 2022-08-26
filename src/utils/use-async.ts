@@ -48,7 +48,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
       })
       .catch((error) => {
         setError(error);
-        return error;
+        // 注意catch会捕获error,不主动抛出就不能继续往下传递
+        return Promise.reject(error);
       });
   };
   // 将所有信息暴露

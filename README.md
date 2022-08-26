@@ -404,3 +404,25 @@ export const useProject = (param?: Partial<Project>) => {
 };
 ```
 同理提取useUsers
+# 添加登录页面Error信息
+```ts
+  const run = (promise: Promise<D>) => {
+    // 如果不是promise类型报错
+    if (!promise || !promise.then) {
+      throw new Error('请传入Promise类型数据');
+    }
+    // 如果是,刚开始是loading状态
+    setState({ ...state, stat: 'loading' });
+    // 最后返回promise
+    return promise
+      .then((data) => {
+        setData(data);
+        return data;
+      })
+      .catch((error) => {
+        setError(error);
+        // 注意catch会捕获error,不主动抛出就不能继续往下传递
+        return Promise.reject(error);
+      });
+  };
+  ```

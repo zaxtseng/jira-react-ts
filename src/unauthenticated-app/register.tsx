@@ -1,14 +1,25 @@
 import { Form, Input } from 'antd';
 import { useAuth } from 'context/auth.context';
 import { LongButton } from 'unauthenticated-app';
+import { useAsync } from 'utils/use-async';
 
-type Props = {};
+type Props = {
+  onError: (error: Error) => void;
+};
 
-const RegisterScreen = (props: Props) => {
+const RegisterScreen = ({ onError }: Props) => {
   const { register, user } = useAuth();
+  const { run, isLoading } = useAsync();
 
-  const handleSubmit = (values: { username: string; password: string }) => {
-    register(values);
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    try {
+      await run(register(values));
+    } catch (e: any) {
+      onError(e);
+    }
   };
 
   return (
@@ -27,7 +38,7 @@ const RegisterScreen = (props: Props) => {
         <Input placeholder="密码" type={'password'} id={'password'} />
       </Form.Item>
       <Form.Item>
-        <LongButton type="primary" htmlType="submit">
+        <LongButton loading={isLoading} type="primary" htmlType="submit">
           注册
         </LongButton>
       </Form.Item>
