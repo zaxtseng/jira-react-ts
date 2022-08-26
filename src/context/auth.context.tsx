@@ -3,6 +3,9 @@ import * as auth from 'auth-provider';
 import { User } from 'screens/project-list/search-panel';
 import { http } from 'utils/http';
 import { useMount } from 'utils';
+import { useAsync } from 'utils/use-async';
+import { FullPageLoading } from 'components/lib';
+import { FullPageErrorFallback } from '../components/lib';
 
 const AuthContext = createContext<
   | {
@@ -33,15 +36,33 @@ const bootstrapUser = async () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+
+  const {
+    run,
+    isIdle,
+    isLoading,
+    isError,
+    error,
+    data: user,
+    setData: setUser,
+  } = useAsync<User | null>();
 
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
+
   // 挂载时重置user
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser());
   });
+
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+  if (isError) {
+    return <FullPageErrorFallback error={error} />;
+  }
 
   return (
     <AuthContext.Provider
