@@ -459,3 +459,24 @@ export class ErrorBoundary extends React.Component<
   }
 }
 ```
+## useHook与闭包
+```tsx
+export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+  // 挂载前
+  const oldTitle = document.title;
+  // 挂载时,传入的title赋给文档的title,而且oldTitle也改变了
+  useEffect(() => {
+    document.title = title
+  },[])
+  // 卸载时
+  useEffect(() => {
+    return () => {
+      if(!keepOnUnmount) {
+        // 因为这里面是一个闭包, 所以里面的oldTitle还是最初的title
+        // 如果不指定依赖,这里的闭包就让title是旧title
+        document.title = oldTitle
+      }
+    }
+  }, [])
+}
+```

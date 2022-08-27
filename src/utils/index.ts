@@ -36,3 +36,24 @@ export const useDebounce = <V>(value: V, delay?: number) => {
   }, [delay, value]);
   return debounceValue;
 };
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  // 挂载前
+  const oldTitle = document.title;
+  // 挂载时
+  useEffect(() => {
+    document.title = title;
+  }, []);
+  // 卸载时
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        // 如果不指定依赖,这里的闭包就让title是旧title
+        document.title = oldTitle;
+      }
+    };
+  }, []);
+};
