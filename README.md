@@ -481,3 +481,29 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
 }
 ```
 第二种方法实现,useRef,在挂载前使用ref保存oldTitle,useEffect中加入依赖.
+# React-Router
+```sh
+yarn add react-router-dom
+```
+
+在要使用的页面构建Router的Context
+```tsx
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+
+const AuthenticatedApp = () => {
+  return (
+    <Container>
+      <PageHeader />
+      <Main>
+        {/* <ProjectListScreen /> */}
+        <Router>
+          <Routes>
+            <Route path="/projects" element={<ProjectListScreen />} />
+            <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
+          </Routes>
+        </Router>
+      </Main>
+    </Container>
+  );
+};
+```
