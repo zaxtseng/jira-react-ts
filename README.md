@@ -480,3 +480,4 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
   }, [])
 }
 ```
+第二种方法实现,useRef,在挂载前使用ref保存oldTitle,useEffect中加入依赖.

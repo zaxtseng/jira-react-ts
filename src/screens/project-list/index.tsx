@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import qs from 'qs';
 import { List, Project } from './list';
 import { SearchPanel } from './search-panel';
-import { cleanObject, useDebounce, useMount } from '../../utils/index';
+import {
+  cleanObject,
+  useDebounce,
+  useDocumentTitle,
+  useMount,
+} from '../../utils/index';
 import { useHttp } from 'utils/http';
 import styled from '@emotion/styled';
 import { useAsync } from '../../utils/use-async';
@@ -19,6 +24,8 @@ export const ProjectListScreen = () => {
   const debounceParam = useDebounce(param, 2000);
   const { isLoading, error, data: list } = useProject(debounceParam);
   const { data: users } = useUsers();
+
+  useDocumentTitle('产品列表', false);
 
   return (
     <Container>

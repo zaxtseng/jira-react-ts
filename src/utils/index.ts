@@ -1,5 +1,5 @@
 // 包含0的特殊情况
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 const isVoid = (value: unknown) =>
@@ -42,11 +42,13 @@ export const useDocumentTitle = (
   keepOnUnmount: boolean = true
 ) => {
   // 挂载前
-  const oldTitle = document.title;
+  // const oldTitle = document.title;
+  // 使用useRef保存title
+  const oldTitle = useRef(document.title).current;
   // 挂载时
   useEffect(() => {
     document.title = title;
-  }, []);
+  }, [title]);
   // 卸载时
   useEffect(() => {
     return () => {
@@ -55,5 +57,5 @@ export const useDocumentTitle = (
         document.title = oldTitle;
       }
     };
-  }, []);
+  }, [keepOnUnmount, oldTitle]);
 };
