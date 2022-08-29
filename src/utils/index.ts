@@ -59,3 +59,6 @@ export const useDocumentTitle = (
     };
   }, [keepOnUnmount, oldTitle]);
 };
+
+// 重定向路由方法
+export const resetRoute = () => (window.location.href = window.location.origin);

@@ -507,3 +507,55 @@ const AuthenticatedApp = () => {
   );
 };
 ```
+## 路由参数Hook
+
+使用泛型约束传入的参数为指定的类型.
+```ts
+import { useSearchParams } from "react-router-dom"
+
+/**
+ * 返回页面url中,指定键的参数值
+ */
+export const useUrlQueryParam = <K extends string>(keys: K[]) => {
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    return [
+        keys.reduce((prev, key) => {
+            return {...prev, [key]: searchParams.get(key) || ''}
+        },{} as {[key in K]: string}),
+        setSearchParams
+    ] as const
+    // as const 将变量声明约束在const所规定的范围
+}
+```
+
+## 查询无限渲染的问题
+安装插件
+```sh
+yarn add --dev @welldone-software/why-did-you-render
+```
+原因: 因为使用useUrlQueryParams每次创建的param都不一样.导致effect的依赖每次都变化.
+
+解决方法: 使用useMemo包裹.
+```ts
+/**
+ * 返回页面url中,指定键的参数值
+ */
+export const useUrlQueryParam = <K extends string>(keys: K[]) => {
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    return [
+        useMemo(() => keys.reduce((prev, key) => {
+            return {...prev, [key]: searchParams.get(key) || ''}
+        },{} as {[key in K]: string}), [searchParams]),
+        // 另外这里不加keys会警告,但是因为keys不是state所以加了会无限循环,可以暂时注掉
+        // 将setSearchParams替换成一个函数进行传入值的约束
+        (params: Partial<{[key in K]: unknown}>) => {
+            // searchParams是Iterator类型 ,可以使用Object.fromEntries转化为对象
+            const o = cleanObject({...Object.fromEntries(searchParams), ...params}) as URLSearchParamsInit
+            return setSearchParams(o)
+        }
+    ] as const
+    // as const 将变量声明约束在const所规定的范围
+}
+```

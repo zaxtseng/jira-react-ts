@@ -1,26 +1,14 @@
-import { useState, useEffect } from 'react';
-import qs from 'qs';
-import { List, Project } from './list';
+import { List } from './list';
 import { SearchPanel } from './search-panel';
-import {
-  cleanObject,
-  useDebounce,
-  useDocumentTitle,
-  useMount,
-} from '../../utils/index';
-import { useHttp } from 'utils/http';
+import { useDebounce, useDocumentTitle } from '../../utils/index';
 import styled from '@emotion/styled';
-import { useAsync } from '../../utils/use-async';
 import { Typography } from 'antd';
 import { useProject } from '../../utils/project';
 import { useUsers } from '../../utils/users';
+import { useUrlQueryParam } from 'utils/url';
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
-    name: '',
-    personId: '',
-  });
-
+  const [param, setParam] = useUrlQueryParam(['name', 'personId']);
   const debounceParam = useDebounce(param, 2000);
   const { isLoading, error, data: list } = useProject(debounceParam);
   const { data: users } = useUsers();
@@ -38,6 +26,8 @@ export const ProjectListScreen = () => {
     </Container>
   );
 };
+// 查询该组件为何无限循环
+ProjectListScreen.whyDidYouRender = false;
 
 const Container = styled.div`
   padding: 3.2rem;
