@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Project } from 'screens/project-list/list';
 import { cleanObject } from 'utils';
 import { useHttp } from './http';
@@ -9,16 +9,16 @@ export const useProject = (param?: Partial<Project>) => {
   const client = useHttp();
   const { run, ...result } = useAsync<Project[]>();
 
-  const fetchProjects = () =>
-    client('projects', { data: cleanObject(param || {}) });
+  const fetchProjects = useCallback(
+    () => client('projects', { data: cleanObject(param || {}) }),
+    [client, param]
+  );
 
   useEffect(() => {
     run(fetchProjects(), {
       retry: fetchProjects,
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param]);
+  }, [fetchProjects, param, run]);
   // 将异步函数的生成结果返回
   return result;
 };

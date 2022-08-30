@@ -641,3 +641,8 @@ const pinProject = (id:number) => (pin: boolean) => mutate({id,pin})
     })
   ```
 # 乐观更新
+
+# 阻止重复渲染
+使用hook传出的函数不再重新定义,
+
+用法:把将要在hook中使用的函数用useCallback包裹.

@@ -1,7 +1,7 @@
 // 包含0的特殊情况
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
-const isFalsy = (value: unknown) => (value === 0 ? false : !value);
+// const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 const isVoid = (value: unknown) =>
   value === undefined || value === null || value === '';
 // 清理不含值的对象
@@ -20,8 +20,7 @@ export const cleanObject = (obj: { [key: string]: unknown }) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [callback]);
 };
 
 export const useDebounce = <V>(value: V, delay?: number) => {
