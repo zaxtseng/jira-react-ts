@@ -3,7 +3,10 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import KanbanScreen from '../kanban/index';
 import EpicScreen from '../epic/index';
 
-const ProjectScreen = () => {
+type Props = {
+  setProjectModalOpen: (isOpen: boolean) => void;
+};
+const ProjectScreen = (props: Props) => {
   return (
     <div>
       <h1>ProjectScreen</h1>

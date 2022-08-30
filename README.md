@@ -646,3 +646,10 @@ const pinProject = (id:number) => (pin: boolean) => mutate({id,pin})
 使用hook传出的函数不再重新定义,
 
 用法:把将要在hook中使用的函数用useCallback包裹.
+
+# 共享模态框
+定义状态
+```tsx
+const [projectModalOpen, setProjectModalOpen] = useState(false);
+```
+创建组件
