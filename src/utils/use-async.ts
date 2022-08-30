@@ -17,7 +17,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
     ...defaultInitialState,
     ...initialState,
   });
-
+  // useState惰性初始化,保存函数会立即执行,如果非要保存,使用函数柯里化
+  const [retry, setRetry] = useState(() => () => {});
   //设置data说明状态成功
   const setData = (data: D) =>
     setState({
@@ -33,11 +34,20 @@ export const useAsync = <D>(initialState?: State<D>) => {
       stat: 'error',
     });
   // 接收异步
-  const run = (promise: Promise<D>) => {
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
     // 如果不是promise类型报错
     if (!promise || !promise.then) {
       throw new Error('请传入Promise类型数据');
     }
+    // 定义重新刷新一次，返回一个有上一次 run 执行时的函数
+    setRetry(() => () => {
+      if (runConfig?.retry) {
+        run(runConfig?.retry(), runConfig);
+      }
+    });
     // 如果是,刚开始是loading状态
     setState({ ...state, stat: 'loading' });
     // 最后返回promise
@@ -52,6 +62,7 @@ export const useAsync = <D>(initialState?: State<D>) => {
         return Promise.reject(error);
       });
   };
+
   // 将所有信息暴露
   return {
     isIdle: state.stat === 'idle',
@@ -61,6 +72,7 @@ export const useAsync = <D>(initialState?: State<D>) => {
     run,
     setData,
     setError,
+    retry,
     ...state,
   };
 };

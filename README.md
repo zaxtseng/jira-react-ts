@@ -622,5 +622,22 @@ const pinProject = (id:number) => (pin: boolean) => mutate({id,pin})
 ```
 
 # retry
- 
+给useAsync添加retry,当被调用时,重新加载run.让state刷新一遍
+```tsx
+  // useState惰性初始化,保存函数会立即执行,如果非要保存,使用函数柯里化
+  const [retry,setRetry] = useState(()=>()=>{})
+  
+    // 接收异步
+  const run = (promise: Promise<D>, runConfig?:{retry: () => Promise<D>}) => {
+    // 如果不是promise类型报错
+    if (!promise || !promise.then) {
+      throw new Error('请传入Promise类型数据');
+    }
+     // 定义重新刷新一次，返回一个有上一次 run 执行时的函数
+    setRetry(()=>()=>{
+      if(runConfig?.retry){
+        run(runConfig?.retry(), runConfig)
+      }
+    })
+  ```
 # 乐观更新
