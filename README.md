@@ -576,3 +576,51 @@ interface IdSelectProps extends SelectProps
 interface IdSelectProps extends Omit<SelectProps, 'value' | "onChange" | "options" | "defaultOptionName">
 ```
 这样我们定义的类型就能够接收所有的 `props` 了，最后还要解构一下其他的 `props` 噢
+
+# 抽象user-Select组件
+
+
+# 添加收藏功能
+函数柯里化
+```tsx
+// 定义hook
+export const useEditProject = () => {
+  const { run,...asyncResult } = useAsync()
+  const client = useHttp()
+  const mutate = (params: Partial<Project>) => {
+    return run(client(`/projects/${params.id}`,{
+      data: params,
+      method: 'PATCH'
+    }))
+  }
+  return {
+    mutate,
+    ...asyncResult
+  }
+}
+// 普通使用
+ const { mutate } = useEditProject()
+  return (
+    <Table
+      columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project){
+            return <Pin checked={true} onCheckedChange={(pin)=>mutate({id:project.id,pin})} />
+          }
+        },
+// 函数科里化
+const pinProject = (id:number) => (pin: boolean) => mutate({id,pin})
+   <Table
+      columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project){
+            return <Pin checked={true} onCheckedChange={pinProject(project.id)} />
+          }
+        },
+```
+
+# retry
+ 
+# 乐观更新

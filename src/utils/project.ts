@@ -16,3 +16,37 @@ export const useProject = (param?: Partial<Project>) => {
   // 将异步函数的生成结果返回
   return result;
 };
+
+export const useEditProject = () => {
+  const { run, ...asyncResult } = useAsync();
+  const client = useHttp();
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`/projects/${params.id}`, {
+        data: params,
+        method: 'PATCH',
+      })
+    );
+  };
+  return {
+    mutate,
+    ...asyncResult,
+  };
+};
+
+export const useAddProject = () => {
+  const { run, ...asyncResult } = useAsync();
+  const client = useHttp();
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`/projects/${params.id}`, {
+        data: params,
+        method: 'POST',
+      })
+    );
+  };
+  return {
+    mutate,
+    ...asyncResult,
+  };
+};
