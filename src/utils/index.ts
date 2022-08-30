@@ -62,3 +62,16 @@ export const useDocumentTitle = (
 
 // 重定向路由方法
 export const resetRoute = () => (window.location.href = window.location.origin);
+
+// 返回组件的挂载状态,为挂载或已卸载返回false,反之,true
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  return mountedRef;
+};

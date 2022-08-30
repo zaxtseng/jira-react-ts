@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMountedRef } from 'utils';
 
 interface State<D> {
   error: Error | null;
@@ -19,6 +20,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
   });
   // useState惰性初始化,保存函数会立即执行,如果非要保存,使用函数柯里化
   const [retry, setRetry] = useState(() => () => {});
+
+  const mountedRef = useMountedRef();
   //设置data说明状态成功
   const setData = (data: D) =>
     setState({
@@ -53,7 +56,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
     // 最后返回promise
     return promise
       .then((data) => {
-        setData(data);
+        // 判断当前是挂载还是卸载状态,挂载才赋值
+        if (mountedRef.current) setData(data);
         return data;
       })
       .catch((error) => {
