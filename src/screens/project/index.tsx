@@ -6,7 +6,7 @@ import EpicScreen from '../epic/index';
 type Props = {
   setProjectModalOpen: (isOpen: boolean) => void;
 };
-const ProjectScreen = (props: Props) => {
+const ProjectScreen = () => {
   return (
     <div>
       <h1>ProjectScreen</h1>

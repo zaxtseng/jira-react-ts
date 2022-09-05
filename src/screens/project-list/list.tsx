@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { useEditProject } from 'utils/project';
 import { User } from './search-panel';
+import { projectListActions } from 'screens/project-list/project-list.slice';
+import { useDispatch } from 'react-redux';
 
 export interface Project {
   id: number;
@@ -17,10 +19,11 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
+  setProjectModalOpen?: (isOpen: boolean) => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  const dispatch = useDispatch();
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
@@ -85,7 +88,9 @@ export const List = ({ users, ...props }: ListProps) => {
                     <Menu.Item key={'edit'}>
                       <ButtonNoPadding
                         type={'link'}
-                        onClick={() => props.setProjectModalOpen(true)}
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
                       >
                         编辑
                       </ButtonNoPadding>

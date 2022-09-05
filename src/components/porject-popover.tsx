@@ -3,15 +3,19 @@ import React from 'react';
 import { useProject } from '../utils/project';
 import styled from '@emotion/styled';
 import { ButtonNoPadding } from './lib';
+import { useDispatch } from 'react-redux';
+import { projectListActions } from 'screens/project-list/project-list.slice';
 
 type Props = {
   setProjectModalOpen: (isOpen: boolean) => void;
 };
 
-const ProjectPopover = (props: Props) => {
+const ProjectPopover = () => {
   const { data: projects, isLoading } = useProject();
   //收藏的项目
   const pinnedProjects = projects?.filter((project) => project.pin);
+
+  const dispatch = useDispatch();
 
   const content = (
     <ContentContainer>
@@ -26,7 +30,7 @@ const ProjectPopover = (props: Props) => {
       <Divider />
       <ButtonNoPadding
         type={'link'}
-        onClick={() => props.setProjectModalOpen(true)}
+        onClick={() => dispatch(projectListActions.openProjectModal())}
       >
         创建项目
       </ButtonNoPadding>
