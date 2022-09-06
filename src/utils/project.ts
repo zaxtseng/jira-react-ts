@@ -1,4 +1,10 @@
 import { useEffect, useCallback } from 'react';
+import {
+  useQuery,
+  QueryClient,
+  useQueryClient,
+  useMutation,
+} from 'react-query';
 import { Project } from 'screens/project-list/list';
 import { cleanObject } from 'utils';
 import { useHttp } from './http';
@@ -7,52 +13,42 @@ import { useAsync } from './use-async';
 // 整个hook根据param变化生成数据,返回project
 export const useProject = (param?: Partial<Project>) => {
   const client = useHttp();
-  const { run, ...result } = useAsync<Project[]>();
-
-  const fetchProjects = useCallback(
-    () => client('projects', { data: cleanObject(param || {}) }),
-    [client, param]
+  // 此处param变化就会重新触发
+  return useQuery<Project[]>(['projects', param], () =>
+    client('projects', { data: param })
   );
-
-  useEffect(() => {
-    run(fetchProjects(), {
-      retry: fetchProjects,
-    });
-  }, [fetchProjects, param, run]);
-  // 将异步函数的生成结果返回
-  return result;
 };
 
 export const useEditProject = () => {
-  const { run, ...asyncResult } = useAsync();
+  // const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<Project>) => {
-    return run(
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: 'PATCH',
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+      }),
+    {
+      // 第二个参数即在成功获取数据后刷新数据
+      onSuccess: () => queryClient.invalidateQueries('projects'),
+    }
+  );
 };
 
 export const useAddProject = () => {
-  const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<Project>) => {
-    return run(
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: 'POST',
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+      }),
+    {
+      // 第二个参数即在成功获取数据后刷新数据
+      onSuccess: () => queryClient.invalidateQueries('projects'),
+    }
+  );
 };

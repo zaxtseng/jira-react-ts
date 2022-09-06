@@ -689,3 +689,65 @@ function Page(props) {
 
 # 使用react-query
 ## 用url管理
+```tsx
+/**
+ * 此处hook扮演一个全局状态管理器的功能
+ */
+export const useProjectModal = () => {
+  //读取url参数
+  const [{ projectCreate }, setProjectCreate] = useUrlQueryParam([
+    'projectCreate',
+  ]);
+
+  const open = () => setProjectCreate({ projectCreate: true });
+  const close = () => setProjectCreate({ projectCreate: undefined });
+
+  return {
+    //因为url拿到的都是字符串
+    projectModalOpen: projectCreate === 'true',
+    open,
+    close,
+  };
+};
+```
+## 关于全局使用的状态操作
+方法一: 可以使用redux设置一个state,设置对应的reducer,
+一个同步设置状态,一个异步thunk.
+
+方法二: 使用缓存,react-query.
+
+
+## 将ErrorBox抽象出来成一个单独组件
+```tsx
+// 类型守卫(当符合条件时,value就是Error类型)
+const isError = (value:any): value is Error =>value?.message
+
+export const ErrorBox = ({error}: {error:unknown}) => {
+  if(isError(error)) {
+    return <Typography.Text type="danger">{error?.message}</Typography.Text>
+  }
+
+  return null
+}
+```
+## 使用react-query改造获取数据改变状态
+```tsx
+// 整个hook根据param变化生成数据,返回project
+export const useProject = (param?: Partial<Project>) => {
+  const client = useHttp();
+  // 此处param变化就会重新触发
+  return useQuery<Project[]>(['projects', param],()=> client('projects',{data: param}))
+};
+
+export const useEditProject = () => {
+  const client = useHttp();
+  const queryClient = useQueryClient()
+  return useMutation((params: Partial<Project>) => client(`projects/${params.id}`, {
+    data: params,
+    method: 'PATCH',
+  }),{
+    // 第二个参数即在成功获取数据后刷新数据
+    onSuccess: () => queryClient.invalidateQueries('projects')
+  })
+};
+```
