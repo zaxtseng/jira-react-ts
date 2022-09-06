@@ -1,14 +1,11 @@
-import { useEffect, useCallback } from 'react';
-import {
-  useQuery,
-  QueryClient,
-  useQueryClient,
-  useMutation,
-} from 'react-query';
+import { useQuery, useQueryClient, useMutation, QueryKey } from 'react-query';
 import { Project } from 'screens/project-list/list';
-import { cleanObject } from 'utils';
 import { useHttp } from './http';
-import { useAsync } from './use-async';
+import {
+  useEditConfig,
+  useAddConfig,
+  useDeleteConfig,
+} from './use-optimistic-options';
 
 // 整个hook根据param变化生成数据,返回project
 export const useProjects = (param?: Partial<Project>) => {
@@ -19,26 +16,21 @@ export const useProjects = (param?: Partial<Project>) => {
   );
 };
 
-export const useEditProject = () => {
-  // const { run, ...asyncResult } = useAsync();
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
+
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: 'PATCH',
       }),
-    {
-      // 第二个参数即在成功获取数据后刷新数据
-      onSuccess: () => queryClient.invalidateQueries('projects'),
-    }
+    useEditConfig(queryKey)
   );
 };
 
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
 
   return useMutation(
     (params: Partial<Project>) =>
@@ -46,10 +38,18 @@ export const useAddProject = () => {
         data: params,
         method: 'POST',
       }),
-    {
-      // 第二个参数即在成功获取数据后刷新数据
-      onSuccess: () => queryClient.invalidateQueries('projects'),
-    }
+    useAddConfig(queryKey)
+  );
+};
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: 'DELETE',
+      }),
+    useDeleteConfig(queryKey)
   );
 };
 

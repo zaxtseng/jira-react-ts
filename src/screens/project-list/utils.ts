@@ -13,6 +13,10 @@ export const useProjectsSearchParams = () => {
   ] as const;
 };
 
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectsSearchParams();
+  return ['projects', params];
+};
 /**
  * 此处hook扮演一个全局状态管理器的功能
  */

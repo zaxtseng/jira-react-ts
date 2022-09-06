@@ -1,6 +1,6 @@
 import { Button, Drawer, Form, Input, Spin } from 'antd';
 import { UserSelect } from 'components/user-select';
-import { useProjectModal } from './utils';
+import { useProjectModal, useProjectsQueryKey } from './utils';
 import { useEditProject } from 'utils/project';
 import { useAddProject } from '../../utils/project';
 import { useEffect } from 'react';
@@ -14,7 +14,11 @@ const ProjectModal = () => {
 
   const title = editingProject ? '编辑项目' : '新建项目';
   const useMutateProject = editingProject ? useEditProject : useAddProject;
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject();
+  const {
+    mutateAsync,
+    error,
+    isLoading: mutateLoading,
+  } = useMutateProject(useProjectsQueryKey());
   // 获取表单，重置表单
   const [form] = useForm();
   const onFinish = (values: any) => {
