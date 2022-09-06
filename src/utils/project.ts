@@ -11,7 +11,7 @@ import { useHttp } from './http';
 import { useAsync } from './use-async';
 
 // 整个hook根据param变化生成数据,返回project
-export const useProject = (param?: Partial<Project>) => {
+export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
   // 此处param变化就会重新触发
   return useQuery<Project[]>(['projects', param], () =>
@@ -42,13 +42,25 @@ export const useAddProject = () => {
 
   return useMutation(
     (params: Partial<Project>) =>
-      client(`projects/${params.id}`, {
+      client(`projects`, {
         data: params,
         method: 'POST',
       }),
     {
       // 第二个参数即在成功获取数据后刷新数据
       onSuccess: () => queryClient.invalidateQueries('projects'),
+    }
+  );
+};
+
+export const useProject = (id?: number) => {
+  const client = useHttp();
+  return useQuery<Project>(
+    ['project', { id }],
+    () => client(`projects/${id}`),
+    {
+      // 第二个参数是配置项,只有id有值时触发
+      enabled: !!id,
     }
   );
 };

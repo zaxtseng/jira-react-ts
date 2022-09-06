@@ -3,7 +3,7 @@ import { SearchPanel } from './search-panel';
 import { useDebounce, useDocumentTitle } from '../../utils/index';
 import styled from '@emotion/styled';
 import { Button, Typography } from 'antd';
-import { useProject } from '../../utils/project';
+import { useProjects } from '../../utils/project';
 import { useUsers } from '../../utils/users';
 import { useProjectsSearchParams } from './utils';
 import { ErrorBox, Row } from 'components/lib';
@@ -13,7 +13,11 @@ export const ProjectListScreen = () => {
   const { open } = useProjectModal();
   const [param, setParam] = useProjectsSearchParams();
   // const debounceParam = useDebounce(projectParams, 2000);
-  const { isLoading, error, data: list } = useProject(useDebounce(param, 2000));
+  const {
+    isLoading,
+    error,
+    data: list,
+  } = useProjects(useDebounce(param, 2000));
   const { data: users } = useUsers();
 
   useDocumentTitle('产品列表', false);

@@ -1,6 +1,6 @@
 import { Divider, List, Popover, Typography } from 'antd';
 import React from 'react';
-import { useProject } from '../utils/project';
+import { useProjects } from '../utils/project';
 import styled from '@emotion/styled';
 import { ButtonNoPadding } from './lib';
 import { useProjectModal } from 'screens/project-list/utils';
@@ -8,7 +8,7 @@ import { useProjectModal } from 'screens/project-list/utils';
 const ProjectPopover = () => {
   const { projectModalOpen, open } = useProjectModal();
 
-  const { data: projects, isLoading } = useProject();
+  const { data: projects, isLoading } = useProjects();
   //收藏的项目
   const pinnedProjects = projects?.filter((project) => project.pin);
 

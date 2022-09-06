@@ -15,7 +15,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
           return { ...prev, [key]: searchParams.get(key) || '' };
           // eslint-disable-next-line react-hooks/exhaustive-deps
         }, {} as { [key in K]: string }),
-      [searchParams]
+      [keys, searchParams]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
       // searchParams是Iterator类型
