@@ -686,3 +686,6 @@ function Page(props) {
 ```
 
 这样我们只用传递 `userLink` 即可，
+
+# 使用react-query
+## 用url管理

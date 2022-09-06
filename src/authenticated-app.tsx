@@ -18,35 +18,22 @@ import ProjectModal from './screens/project-list/project-modal';
 import ProjectPopover from 'components/porject-popover';
 
 const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
   return (
     <Container>
-      <PageHeader setProjectModalOpen={setProjectModalOpen} />
-      <Main>
-        {/* <ProjectListScreen /> */}
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
+          {/* <ProjectListScreen /> */}
+
           <Routes>
             <Route path="/" element={<Navigate to={'/projects'} />} />
-            <Route
-              path="/projects"
-              element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            />
-            <Route
-              path="/projects/:projectId/*"
-              element={
-                <ProjectScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            />
+            <Route path="/projects" element={<ProjectListScreen />} />
+            <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
           </Routes>
-        </Router>
-      </Main>
+        </Main>
 
-      <ProjectModal
-        projectModalOpen={projectModalOpen}
-        onClose={() => setProjectModalOpen(false)}
-      />
+        <ProjectModal />
+      </Router>
     </Container>
   );
 };
@@ -74,9 +61,7 @@ const Main = styled.main`
   height: calc(100vh - 6rem);
 `;
 
-const PageHeader = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+const PageHeader = () => {
   const { logout, user } = useAuth();
   return (
     <Header between={true}>
@@ -84,7 +69,7 @@ const PageHeader = (props: {
         <ButtonNoPadding type={'link'} onClick={resetRoute}>
           <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
         </ButtonNoPadding>
-        <ProjectPopover setProjectModalOpen={props.setProjectModalOpen} />
+        <ProjectPopover />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
