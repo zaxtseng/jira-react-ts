@@ -6,6 +6,7 @@ import { useMount } from 'utils';
 import { useAsync } from 'utils/use-async';
 import { FullPageLoading } from 'components/lib';
 import { FullPageErrorFallback } from '../components/lib';
+import { useQueryClient } from 'react-query';
 
 const AuthContext = createContext<
   | {
@@ -47,10 +48,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     data: user,
     setData: setUser,
   } = useAsync<User | null>();
+  const queryClient = useQueryClient();
 
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      // 清除usequery获取的数据
+      queryClient.clear();
+    });
 
   // 挂载时重置user
   useMount(() => {
