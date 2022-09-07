@@ -6,8 +6,8 @@ import { cleanObject } from './index';
  * 返回页面url中,指定键的参数值
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const [searchParams] = useSearchParams();
+  const setSearchParams = useSetUrlSearchParam();
   return [
     useMemo(
       () =>
@@ -19,11 +19,18 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
       // searchParams是Iterator类型
-      const o = cleanObject({
-        ...Object.fromEntries(searchParams),
-        ...params,
-      }) as URLSearchParamsInit;
-      return setSearchParams(o);
+      return setSearchParams(params);
     },
   ] as const;
+};
+// 通过这个单独的 hook 来 set search param
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  return (params: { [key in string]: unknown }) => {
+    const o = cleanObject({
+      ...Object.fromEntries(searchParams),
+      ...params,
+    }) as URLSearchParamsInit;
+    return setSearchParams(o);
+  };
 };

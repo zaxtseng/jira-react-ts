@@ -1,6 +1,7 @@
-import { useUrlQueryParam } from 'utils/url';
+import { useSetUrlSearchParam, useUrlQueryParam } from 'utils/url';
 import { useMemo } from 'react';
 import { useProject } from 'utils/project';
+import { useSearchParams } from 'react-router-dom';
 
 export const useProjectsSearchParams = () => {
   const [param, setParam] = useUrlQueryParam(['name', 'personId']);
@@ -36,16 +37,15 @@ export const useProjectModal = () => {
     Number(editingProjectId)
   );
 
+  const setUrlParams = useSetUrlSearchParam();
   const open = () => setProjectCreate({ projectCreate: true });
+  const close = () => setUrlParams({ editingProjectId: '', projectCreate: '' });
+
   // const close = () => {
-  //      setEditingProjectId({ editingProjectId: undefined })
-  //      setProjectCreate({ projectCreate: undefined });
+  //   editingProjectId
+  //     ? setEditingProjectId({ editingProjectId: undefined })
+  //     : setProjectCreate({ projectCreate: undefined });
   // };
-  const close = () => {
-    editingProjectId
-      ? setEditingProjectId({ editingProjectId: undefined })
-      : setProjectCreate({ projectCreate: undefined });
-  };
 
   //开始编辑
   const startEdit = (id: number) =>
