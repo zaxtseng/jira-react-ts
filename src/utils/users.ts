@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { cleanObject } from 'utils';
+import { User } from '../types/user';
 import { useHttp } from './http';
 import { useAsync } from './use-async';
-import { User } from '../screens/project-list/search-panel';
 
 // 整个hook根据param变化生成数据,返回project
 export const useUsers = (param?: Partial<User>) => {

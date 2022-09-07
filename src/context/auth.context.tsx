@@ -1,12 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
 import * as auth from 'auth-provider';
-import { User } from 'screens/project-list/search-panel';
-import { http } from 'utils/http';
-import { useMount } from 'utils';
-import { useAsync } from 'utils/use-async';
 import { FullPageLoading } from 'components/lib';
-import { FullPageErrorFallback } from '../components/lib';
+import { createContext, ReactNode, useContext } from 'react';
 import { useQueryClient } from 'react-query';
+import { User } from 'types/user';
+import { useMount } from 'utils';
+import { http } from 'utils/http';
+import { useAsync } from 'utils/use-async';
+import { FullPageErrorFallback } from '../components/lib';
 
 const AuthContext = createContext<
   | {

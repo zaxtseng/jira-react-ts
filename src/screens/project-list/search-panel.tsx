@@ -1,18 +1,8 @@
-// import { useState, useEffect } from "react";
-
-import { Input, Select } from 'antd';
-import { Form } from 'antd';
+import { Form, Input } from 'antd';
 import { UserSelect } from 'components/user-select';
-import { Project } from 'screens/project-list/list';
+import { Project } from 'types/project';
+import { User } from 'types/user';
 
-export interface User {
-  name: string;
-  id: number;
-  email: string;
-  title: string;
-  organization: string;
-  token: string;
-}
 export interface SearchPanelProps {
   users: User[];
   param: Partial<Pick<Project, 'name' | 'personId'>>;

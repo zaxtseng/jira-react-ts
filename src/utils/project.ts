@@ -1,10 +1,10 @@
-import { useQuery, useQueryClient, useMutation, QueryKey } from 'react-query';
-import { Project } from 'screens/project-list/list';
+import { QueryKey, useMutation, useQuery } from 'react-query';
+import { Project } from 'types/project';
 import { useHttp } from './http';
 import {
-  useEditConfig,
   useAddConfig,
   useDeleteConfig,
+  useEditConfig,
 } from './use-optimistic-options';
 
 // 整个hook根据param变化生成数据,返回project
