@@ -1,21 +1,19 @@
-import { useAuth } from 'context/auth.context';
-import { ProjectListScreen } from './screens/project-list/index';
 import styled from '@emotion/styled';
-import { ButtonNoPadding, Row } from './components/lib';
+import { Button, Dropdown, Menu } from 'antd';
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg';
-import { Dropdown, Menu, Button } from 'antd';
+import ProjectPopover from 'components/porject-popover';
+import { useAuth } from 'context/auth.context';
 import {
-  Route,
   BrowserRouter as Router,
-  Routes,
   Navigate,
+  Route,
+  Routes,
 } from 'react-router-dom';
 import ProjectScreen from 'screens/project';
 import { resetRoute } from 'utils';
-import { useState } from 'react';
-import projectModal from './screens/project-list/project-modal';
+import { ButtonNoPadding, Row } from './components/lib';
+import { ProjectListScreen } from './screens/project-list/index';
 import ProjectModal from './screens/project-list/project-modal';
-import ProjectPopover from 'components/porject-popover';
 
 const AuthenticatedApp = () => {
   return (
@@ -58,6 +56,8 @@ const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
 
 const Main = styled.main`
+  display: flex;
+  overflow: hidden;
   height: calc(100vh - 6rem);
 `;
 
