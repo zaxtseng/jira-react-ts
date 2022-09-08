@@ -28,20 +28,21 @@ const ProjectScreen = () => {
           </Menu.Item>
         </Menu>
       </Aside>
-
-      <Routes>
-        <Route path="/kanban" element={<KanbanScreen />} />
-        <Route path="/epic" element={<EpicScreen />} />
-        <Route
-          path="/*"
-          element={
-            <Navigate
-              to={window.location.pathname + '/kanban'}
-              replace={true}
-            />
-          }
-        />
-      </Routes>
+      <Main>
+        <Routes>
+          <Route path="/kanban" element={<KanbanScreen />} />
+          <Route path="/epic" element={<EpicScreen />} />
+          <Route
+            path="/*"
+            element={
+              <Navigate
+                to={window.location.pathname + '/kanban'}
+                replace={true}
+              />
+            }
+          />
+        </Routes>
+      </Main>
     </Container>
   );
 };
@@ -52,11 +53,13 @@ const Aside = styled.aside`
 `;
 const Main = styled.div`
   box-shadow: -5px 0 -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  overflow: hidden;
 `;
 // grid 布局，左边16rem，右边随意
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 16rem 1fr;
+  grid-template-columns: 20rem 1fr;
 `;
 
 export default ProjectScreen;

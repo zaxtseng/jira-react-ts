@@ -5,17 +5,22 @@ import taskIcon from 'assets/task.svg';
 import { Kanban } from 'types/kanban';
 import { useTaskTypes } from 'utils/taskType';
 import { useTasks } from '../../utils/task';
+import { CreateTask } from './create-task';
 import { useTasksSearchParams } from './utils';
 
 const TasksTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
-  console.log(taskTypes, 'taskTypes');
-
   const name = taskTypes?.find((taskType) => taskType.id === id)?.name;
   if (!name) {
     return null;
   }
-  return <img src={name === 'task' ? taskIcon : bugIcon} alt="" />;
+  return (
+    <img
+      src={name === 'task' ? taskIcon : bugIcon}
+      alt=""
+      style={{ width: '2rem' }}
+    />
+  );
 };
 
 export const KanbanColum = ({ kanban }: { kanban: Kanban }) => {
@@ -32,13 +37,15 @@ export const KanbanColum = ({ kanban }: { kanban: Kanban }) => {
             <TasksTypeIcon id={tasks.typeId} />
           </Card>
         ))}
+        <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
   );
 };
 
-const Container = styled.div`
+export const Container = styled.div`
   min-width: 27rem;
+  min-height: 35rem;
   border-radius: 6px;
   background-color: rgb(244, 245, 247);
   display: flex;
