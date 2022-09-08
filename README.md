@@ -760,3 +760,5 @@ react-query / swr
 ## 客户端状态
 url / redux / context
 # 看板页面开发
+## 获取看板页面
+新建utils/kanban.ts
