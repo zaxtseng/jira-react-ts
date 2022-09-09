@@ -762,3 +762,26 @@ url / redux / context
 # 看板页面开发
 ## 获取看板页面
 新建utils/kanban.ts
+
+# 拖拽排序
+使用react-beautiful-dnd插件.
+```tsx
+export const Drop = ({ children, ...props }: DropProps) => {
+  return (
+    <Droppable {...props}>
+      {(provided => {
+        if (React.isValidElement(children)) {
+          //cloneElement用于将props传入绑定到children上
+          return React.cloneElement(children, {
+            ...provided.droppableProps,
+            ref: provided.innerRef,
+            provided
+          });
+        }
+        return <div />;
+      })
+    }
+    </Droppable>
+  );
+};
+```

@@ -15,6 +15,7 @@ import {
 import { Task } from 'types/task';
 import { useDeleteKanban } from '../../utils/kanban';
 import { Row } from 'components/lib';
+import { forwardRef } from 'react';
 
 const TasksTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
@@ -48,25 +49,27 @@ const TaskCard = ({ task }: { task: Task }) => {
     </Card>
   );
 };
-export const KanbanColum = ({ kanban }: { kanban: Kanban }) => {
-  const { data: allTasks } = useTasks(useTasksSearchParams());
-  const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
+export const KanbanColum = forwardRef<HTMLDivElement, { kanban: Kanban }>(
+  ({ kanban, ...props }, ref) => {
+    const { data: allTasks } = useTasks(useTasksSearchParams());
+    const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
 
-  return (
-    <Container>
-      <Row between={true}>
-        <h3>{kanban.name}</h3>
-        <More kanban={kanban} />
-      </Row>
-      <TasksContainer>
-        {tasks?.map((task) => (
-          <TaskCard task={task} key={task.id} />
-        ))}
-        <CreateTask kanbanId={kanban.id} />
-      </TasksContainer>
-    </Container>
-  );
-};
+    return (
+      <Container ref={ref} {...props}>
+        <Row between={true}>
+          <h3>{kanban.name}</h3>
+          <More kanban={kanban} key={kanban.id} />
+        </Row>
+        <TasksContainer>
+          {tasks?.map((task) => (
+            <TaskCard task={task} key={task.id} />
+          ))}
+          <CreateTask kanbanId={kanban.id} />
+        </TasksContainer>
+      </Container>
+    );
+  }
+);
 
 const More = ({ kanban }: { kanban: Kanban }) => {
   const { mutateAsync } = useDeleteKanban(useKanbansQueryKey());
