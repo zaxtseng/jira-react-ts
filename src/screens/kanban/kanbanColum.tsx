@@ -1,12 +1,20 @@
 import styled from '@emotion/styled';
-import { Card } from 'antd';
+import { Button, Card, Dropdown, Menu, Modal } from 'antd';
 import bugIcon from 'assets/bug.svg';
 import taskIcon from 'assets/task.svg';
+import { Mark } from 'components/mark';
 import { Kanban } from 'types/kanban';
 import { useTaskTypes } from 'utils/taskType';
 import { useTasks } from '../../utils/task';
 import { CreateTask } from './create-task';
-import { useTasksSearchParams } from './utils';
+import {
+  useTasksSearchParams,
+  useTaskModal,
+  useKanbansQueryKey,
+} from './utils';
+import { Task } from 'types/task';
+import { useDeleteKanban } from '../../utils/kanban';
+import { Row } from 'components/lib';
 
 const TasksTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
@@ -23,23 +31,70 @@ const TasksTypeIcon = ({ id }: { id: number }) => {
   );
 };
 
+const TaskCard = ({ task }: { task: Task }) => {
+  const { startEdit } = useTaskModal();
+  const { name: keyword } = useTasksSearchParams();
+
+  return (
+    <Card
+      onClick={() => startEdit(task.id)}
+      style={{ marginBottom: '0.5rem' }}
+      key={task.id}
+    >
+      <p>
+        <Mark keyword={keyword} name={task.name} />
+      </p>
+      <TasksTypeIcon id={task.typeId} />
+    </Card>
+  );
+};
 export const KanbanColum = ({ kanban }: { kanban: Kanban }) => {
   const { data: allTasks } = useTasks(useTasksSearchParams());
   const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
 
   return (
     <Container>
-      <h3>{kanban.name}</h3>
+      <Row between={true}>
+        <h3>{kanban.name}</h3>
+        <More kanban={kanban} />
+      </Row>
       <TasksContainer>
-        {tasks?.map((tasks) => (
-          <Card style={{ marginBottom: '0.5rem' }} key={tasks.id}>
-            <div>{tasks.name}</div>
-            <TasksTypeIcon id={tasks.typeId} />
-          </Card>
+        {tasks?.map((task) => (
+          <TaskCard task={task} key={task.id} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
+  );
+};
+
+const More = ({ kanban }: { kanban: Kanban }) => {
+  const { mutateAsync } = useDeleteKanban(useKanbansQueryKey());
+
+  const startEdit = () => {
+    Modal.confirm({
+      okText: '确定',
+      cancelText: '取消',
+      title: '你确定删除看板吗？',
+      onOk() {
+        return mutateAsync({ id: kanban.id });
+      },
+    });
+  };
+  const overlay = (
+    <Menu>
+      <Menu.Item>
+        <Button type={'link'} onClick={startEdit}>
+          删除
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
+
+  return (
+    <Dropdown overlay={overlay}>
+      <Button type={'link'}>...</Button>
+    </Dropdown>
   );
 };
 

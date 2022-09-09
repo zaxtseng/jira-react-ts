@@ -24,17 +24,20 @@ export const useMount = (callback: () => void) => {
   }, []);
 };
 
-export const useDebounce = <V>(value: V, delay?: number) => {
-  const [debounceValue, setDebounceValue] = useState(value);
+// 后面用泛型来解决
+export const useDebounce = <V>(value: V, delay?: number): any => {
+  // 设置一个 debouncedValue 值，用于暂存值，以及监控变化
+  const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
-    // 每次value变化,设置一个定时器
-    const timeout = setTimeout(() => setDebounceValue(value), delay);
-    // 每次在上一个useEffect处理完在执行
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [delay, value]);
-  return debounceValue;
+    // 接收一个定时器，参数为一个函数和延时时间
+    // 每次value变化，设置一个定时器
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+    // 每次上一个useEffect 的定时器被清除，相当于上一个定时器被卸载了
+    return () => clearTimeout(timeout);
+    // 监听value 和 delay 变化，当参数变化时，重新调用这个函数设置定时器
+  }, [value, delay]);
+  // 返回值
+  return debouncedValue;
 };
 
 export const useDocumentTitle = (
