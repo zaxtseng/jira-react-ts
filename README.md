@@ -785,3 +785,6 @@ export const Drop = ({ children, ...props }: DropProps) => {
   );
 };
 ```
+
+## 拖拽数据持久化
+要将数据存储下来.

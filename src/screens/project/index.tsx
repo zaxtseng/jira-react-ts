@@ -52,14 +52,16 @@ const Aside = styled.aside`
   display: flex;
 `;
 const Main = styled.div`
-  box-shadow: -5px 0 -5px rgba(0, 0, 0, 0.1);
   display: flex;
+  box-shadow: -5px 0 -5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;
 // grid 布局，左边16rem，右边随意
 const Container = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: 20rem 1fr;
+  /* overflow: hidden; */
 `;
 
 export default ProjectScreen;

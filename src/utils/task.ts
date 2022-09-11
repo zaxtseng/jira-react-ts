@@ -1,10 +1,12 @@
 import { QueryKey, useMutation, useQuery } from 'react-query';
 import { Task } from 'types/task';
 import { useHttp } from './http';
+import { SortProps } from './kanban';
 import {
   useAddConfig,
   useDeleteConfig,
   useEditConfig,
+  useReorderConfig,
 } from './use-optimistic-options';
 
 export const useTasks = (param?: Partial<Task>) => {
@@ -57,4 +59,13 @@ export const useTask = (id?: number) => {
     // 第二个参数是配置项,只有id有值时触发
     enabled: !!id,
   });
+};
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client('tasks/reorder', {
+      data: params,
+      method: 'POST',
+    });
+  }, useReorderConfig(queryKey));
 };

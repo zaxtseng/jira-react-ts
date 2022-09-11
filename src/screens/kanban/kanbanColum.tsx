@@ -16,6 +16,7 @@ import { Task } from 'types/task';
 import { useDeleteKanban } from '../../utils/kanban';
 import { Row } from 'components/lib';
 import { forwardRef } from 'react';
+import { Drag, Drop, DropChild } from 'components/drag-and-drop';
 
 const TasksTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
@@ -61,9 +62,25 @@ export const KanbanColum = forwardRef<HTMLDivElement, { kanban: Kanban }>(
           <More kanban={kanban} key={kanban.id} />
         </Row>
         <TasksContainer>
-          {tasks?.map((task) => (
-            <TaskCard task={task} key={task.id} />
-          ))}
+          <Drop
+            type={'ROW'}
+            direction={'vertical'}
+            droppableId={String(kanban.id)}
+          >
+            <DropChild>
+              {tasks?.map((task, taskIndex) => (
+                <Drag
+                  key={task.id}
+                  index={taskIndex}
+                  draggableId={'task' + task.id}
+                >
+                  <div>
+                    <TaskCard task={task} key={task.id} />
+                  </div>
+                </Drag>
+              ))}
+            </DropChild>
+          </Drop>
           <CreateTask kanbanId={kanban.id} />
         </TasksContainer>
       </Container>
