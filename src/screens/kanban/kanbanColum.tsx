@@ -27,7 +27,7 @@ const TasksTypeIcon = ({ id }: { id: number }) => {
   return (
     <img
       src={name === 'task' ? taskIcon : bugIcon}
-      alt=""
+      alt="task-icon"
       style={{ width: '2rem' }}
     />
   );
