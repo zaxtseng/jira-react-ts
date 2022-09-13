@@ -117,7 +117,7 @@ export const useDragEnd = () => {
     [allTasks, kanbans, reorderKanban, reorderTask]
   );
 };
-export const ColumnContainer = styled.div`
+export const ColumnContainer = styled('div')`
   display: flex;
   flex: 1;
   overflow-x: scroll;

@@ -120,7 +120,7 @@ const More = ({ kanban }: { kanban: Kanban }) => {
 
 export const Container = styled.div`
   min-width: 27rem;
-  min-height: 35rem;
+  /* min-height: 35rem; */
   border-radius: 6px;
   background-color: rgb(244, 245, 247);
   display: flex;

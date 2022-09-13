@@ -1,13 +1,13 @@
-import { List } from './list';
-import { SearchPanel } from './search-panel';
-import { useDebounce, useDocumentTitle } from '../../utils/index';
 import styled from '@emotion/styled';
-import { Button, Typography } from 'antd';
-import { useProjects } from '../../utils/project';
-import { useUsers } from '../../utils/users';
-import { useProjectsSearchParams } from './utils';
+import { Button } from 'antd';
 import { ErrorBox, Row } from 'components/lib';
 import { useProjectModal } from 'screens/project-list/utils';
+import { useDebounce, useDocumentTitle } from '../../utils/index';
+import { useProjects } from '../../utils/project';
+import { useUsers } from '../../utils/users';
+import { List } from './list';
+import { SearchPanel } from './search-panel';
+import { useProjectsSearchParams } from './utils';
 
 export const ProjectListScreen = () => {
   const { open } = useProjectModal();
