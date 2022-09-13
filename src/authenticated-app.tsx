@@ -14,6 +14,7 @@ import { resetRoute } from 'utils';
 import { ButtonNoPadding, Row } from './components/lib';
 import { ProjectListScreen } from './screens/project-list/index';
 import ProjectModal from './screens/project-list/project-modal';
+import UserPopover from './components/user-popover';
 
 const AuthenticatedApp = () => {
   return (
@@ -70,7 +71,7 @@ const PageHeader = () => {
           <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <Dropdown

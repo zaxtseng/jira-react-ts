@@ -1,14 +1,13 @@
-import { Divider, List, Popover, Typography } from 'antd';
-import React from 'react';
-import { useProjects } from '../utils/project';
 import styled from '@emotion/styled';
-import { ButtonNoPadding } from './lib';
+import { Divider, List, Popover, Typography } from 'antd';
 import { useProjectModal } from 'screens/project-list/utils';
+import { useProjects } from '../utils/project';
+import { ButtonNoPadding } from './lib';
 
 const ProjectPopover = () => {
-  const { projectModalOpen, open } = useProjectModal();
+  const { open } = useProjectModal();
 
-  const { data: projects, isLoading } = useProjects();
+  const { data: projects, refetch } = useProjects();
   //收藏的项目
   const pinnedProjects = projects?.filter((project) => project.pin);
 
@@ -31,7 +30,11 @@ const ProjectPopover = () => {
 
   return (
     <>
-      <Popover placement="bottom" content={content}>
+      <Popover
+        onVisibleChange={() => refetch()}
+        placement="bottom"
+        content={content}
+      >
         <span>项目</span>
       </Popover>
     </>
