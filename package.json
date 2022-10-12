@@ -57,12 +57,14 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/qs": "^6.9.7",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "eslint-config-prettier": "^8.5.0",
     "husky": "^8.0.1",
     "lint-staged": ">=10",
+    "msw": "^0.47.4",
     "prettier": "2.7.1"
   },
   "lint-staged": {

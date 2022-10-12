@@ -109,7 +109,7 @@ fetch("").then(async (res) => {
 
 修改值时可以先将该值拷贝,修改拷贝值,return出来
 ```tsx
-const useArray = <T></T>(initialArray: T[]) => {
+const useArray = <T>(initialArray: T[]) => {
   const [value, setValue] = useState(initialArray)
 
   return {
@@ -788,3 +788,152 @@ export const Drop = ({ children, ...props }: DropProps) => {
 
 ## 拖拽数据持久化
 要将数据存储下来.
+
+# 搭建集成测试和单元测试
+```bash
+yarn add @testing-library/react-hooks msw -D
+```
+
+新建`__tests__`文件夹,约定`__`为测试使用文件夹.
+
+## 单元测试
+在`__tests__/http`中测试`http`模块.
+
+下面模块用于模拟异步请求.
+```ts
+import { setupServer } from 'msw/node'
+const server = setupServer()
+
+// beforeAll是Jest测试库中一个方法,表示执行所有测试之前先执行
+beforeAll(() => server.listen())
+//每次测试完毕都重置mock路由
+afterEach(() => server.resetHandlers())
+//所有测试完毕后,关闭mock路由
+afterAll(()=> server.close())
+
+// 开始测试,第二个参数是回调函数就是测试内容
+test('http异步发送请求', async () => { 
+    const endpoint = "test-endpoint"
+    const mockResult = { mockValue: 'mock'}
+
+    // 使用msw模拟mock
+    server.use(
+        // rest是msw中用于restful接口的方法
+        rest.get(`${apiUrl}/${endpoint}`,(req,res,ctx) =>{
+            res(ctx.json(mockResult))
+        })
+    )
+    // 使用http模块返回mock值
+    const result = await http(endpoint)
+    // 期望http的返回值和mock数据相等(注意不是完全相等,完全是toBe)
+    expect(result).toEqual(mockResult)
+ })
+
+test('http请求时携带token', async () => { 
+  const token = 'FAKE_TOKEN'
+  const endpoint = "test-endpoint"
+  const mockResult = { mockValue: 'mock'}
+
+  let request:any
+
+  // 使用msw模拟mock
+  server.use(
+      // rest是msw中用于restful接口的方法
+      rest.get(`${apiUrl}/${endpoint}`,(req,res,ctx) =>{
+          request = req
+          return res(ctx.json(mockResult))
+      })
+  )
+  // 使用http模块返回mock值
+  await http(endpoint,{ token })
+  // 期望http的返回值和mock数据相等(注意不是完全相等,完全是toBe)
+  expect(request.headers.get('Authorization')).toBe(`Bearer ${token}`)
+})
+```
+## 测试Hook
+新建`__test__/use-async`文件.
+```ts
+import { act, renderHook } from "@testing-library/react";
+import { useAsync } from "utils/use-async";
+
+const defaultState: ReturnType<typeof useAsync> = {
+  stat: "idle",
+  error: null,
+  data: null,
+  isIdle: true,
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+  run: expect.any(Function),
+  setData: expect.any(Function),
+  setError: expect.any(Function),
+  retry: expect.any(Function),
+};
+
+const loadingState: ReturnType<typeof useAsync> = {
+  ...defaultState,
+  stat: "loading",
+  isLoading: true,
+  isIdle: false,
+};
+const successState: ReturnType<typeof useAsync> = {
+  ...defaultState,
+  stat: "success",
+  isSuccess: true,
+  isIdle: false,
+};
+
+// 测试脚本
+test("useAsync可以异步处理", async () => {
+  let resolve: any, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  const { result } = renderHook(() => useAsync());
+  // 期望Hook的默认返回值与test的默认值一致
+  expect(result.current).toEqual(defaultState)
+
+  let p: Promise<any>;
+  // 如果操作包含改变setState,需要使用act包裹
+  act(() => {
+    p = result.current.run(promise)
+  })
+  // 期望刚创建的promise中是loading状态
+  expect(result.current).toEqual(loadingState)
+
+
+  // 期望promise执行完毕后,返回的值是success状态的值
+  const resolvedValue = { mockValue: 'resolved'}
+  act(async () => {
+    // 执行resolve,之后promise就是fulfilled
+    resolve(resolvedValue)
+    await p
+  })
+  expect(result.current).toEqual({
+    ...successState,
+    data: resolvedValue
+  })
+});
+```
+## 测试组件
+新建`__tests__/mark.tsx`用于测试高亮组件.
+```tsx
+import { renderHook } from "@testing-library/react-hooks";
+import { screen } from "@testing-library/react";
+import { Mark } from "../components/mark";
+
+test("Mark组件正确高亮关键词", () => {
+  const name = "物料管理";
+  const keyword = "管理";
+
+  renderHook(() => <Mark name={name} keyword={keyword} />);
+
+  // 期望keyword存在document中
+  expect(screen.getByText(keyword)).toBeInTheDocument();
+  expect(screen.getByText(keyword)).toHaveStyle("color: #257AFD");
+  // 期望其他字没有高亮颜色
+  expect(screen.getByText("物料")).not.toHaveStyle("color: #257AFD");
+});
+```
