@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () =>
     auth.logout().then(() => {
       setUser(null);
-      // 清除usequery获取的数据
+      // 清除useQuery获取的数据
       queryClient.clear();
     });
 

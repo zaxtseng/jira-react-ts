@@ -686,7 +686,7 @@ export const useEditConfig = (queryKey: QueryKey) =>
   );
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => (old ? [...old, target] : []));
-
+  
 export const useReorderKanbanConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => reorder({ list: old, ...target }));
 export const useReorderTaskConfig = (queryKey: QueryKey) =>
@@ -819,6 +819,92 @@ url / redux / context
 # 看板页面开发
 ## 获取看板页面
 新建utils/kanban.ts
+
+# Redux
+## Redux-Toolkit
+```sh
+pnpm add react-redux @reduxjs/toolkit
+```
+### 创建store
+```tsx
+// src/store.ts
+import { configureStore } from "@reduxjs/toolkit"
+
+export const rootReducer = {
+  projectList: projectListSlice.reducer
+}
+
+export const store = configureStore({
+  reducer: rootReducer
+})
+
+export type AppDispatch = typeof store.dispatch
+
+export type RootState = ReturnType<typeof store.getState>
+```
+## slice 切片
+```ts
+// src/screens/project-list/project-list-slice.ts 
+import { createSlice } from "@reduxjs/toolkit";
+
+interface State {
+  projectModalOpen: boolean;
+}
+
+const initialState: State = {
+  projectModalOpen: false
+}
+
+export const projectListSlice = createSlice({
+  name: 'projectListSlice',
+  initialState,
+  reducers: {
+    openProjectModal(state){
+      state.projectModalOpen = true
+    }
+    closeProjectModal(state){
+      state.projectModalOpen = false
+    }
+  }
+})
+
+export const projectListActions = projectListSlice.actions
+```
+上面的reducer中直接赋值是因为使用了`immer`,帮忙处理了.
+## 使用useDispatch
+在正常页面中调用Dispatch就是使用useDispatch
+```tsx
+// src/component/project-popover.tsx
+const dispatch = useDispatch()
+
+//...
+<ButtonNoPadding
+  onClick={() => dispatch(projectListActions.openProjectModal())}
+  type={"link"}
+>
+  创建项目
+</ButtonNoPadding>
+```
+## 使用useSelector获取state
+在组件中获取state
+```tsx
+// src/screens/project-list/project-modal.tsx
+export const ProjectModal = () => {
+  const dispatch = useDispatch()
+  const projectModalOpen = useSelector(state => state.projectList.projectModalOpen)
+
+  // ...
+  return (
+    <Drawer
+      onClose={()=>dispatch(projectListActions.closeProjectModal())}
+      visible={projectModalOpen}
+    >
+    {/*...*/}
+  ) 
+}
+
+```
+
 
 # 拖拽排序
 使用react-beautiful-dnd插件.
@@ -993,4 +1079,4 @@ test("Mark组件正确高亮关键词", () => {
   // 期望其他字没有高亮颜色
   expect(screen.getByText("物料")).not.toHaveStyle("color: #257AFD");
 });
-```
+``` 
